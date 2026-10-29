@@ -13,7 +13,6 @@ A responsive employee directory built with React, TypeScript, Vite and Lucide ic
 - Local browser persistence using `localStorage`
 - Responsive layout
 
-> This first version is frontend-only. The data is stored in the browser's localStorage, not in a backend or shared database. Do not use it for sensitive real employee data.
 
 ## Requirements
 - Node.js 20.19+ or 22.12+ recommended
@@ -32,11 +31,8 @@ npm run build
 npm run preview
 ```
 
-## Suggested next step: connect a backend
-Replace the local state/localStorage persistence with an API client. Example endpoints:
-- `GET /api/employees`
-- `POST /api/employees`
-- `PUT /api/employees/{id}`
-- `DELETE /api/employees/{id}`
+## Suggested next step: 
 
-The API should validate inputs, enforce authorization and persist data in a database. Frontend validation is for user experience only and is not a security boundary.
+-The API should validate inputs,
+-Enforce authorization, 
+-Persist data in a database.
