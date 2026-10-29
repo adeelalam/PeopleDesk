@@ -1,0 +1,6 @@
+@PeopleDesk.Api_HostAddress = http://localhost:5183
+
+GET {{PeopleDesk.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

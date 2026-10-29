@@ -1,0 +1,29 @@
+
+# Frontend dependencies and build output
+node_modules/
+dist/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Local .NET configuration containing credentials
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+
+# IDE and operating system files
+.vscode/
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+npm-debug.log*
