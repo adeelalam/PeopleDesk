@@ -243,6 +243,54 @@ function App() {
       return;
     }
 
+// To Do: Validate hire date.
+// const today = new Date();
+
+// const todayString = [
+//   today.getFullYear(),
+//   String(today.getMonth() + 1).padStart(2, "0"),
+//   String(today.getDate()).padStart(2, "0"),
+// ].join("-");
+
+// const hireDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+// if (
+//   !hireDatePattern.test(form.joined) ||
+//   Number.isNaN(new Date(`${form.joined}T00:00:00`).getTime()) ||
+//   new Date(`${form.joined}T00:00:00`).toISOString().slice(0, 10) !== form.joined
+// ) {
+//   setFormError("Enter a valid hire date.");
+//   return;
+// }
+
+// if (form.joined > todayString) {
+//   setFormError("Hire date cannot be in the future.");
+//   return;
+// }
+
+// Validate department.
+const validDepartments = [
+  "Engineering",
+  "Design",
+  "Human Resources",
+  "Marketing",
+  "Finance",
+  "Operations",
+];
+
+if (!validDepartments.includes(form.department)) {
+  setFormError("Please select a valid department.");
+  return;
+}
+
+// Validate employee status.
+const validStatuses = ["Active", "On leave", "Inactive"];
+
+if (!validStatuses.includes(form.status)) {
+  setFormError("Please select a valid employee status.");
+  return;
+}
+
     const normalized: EmployeeInput = {
       ...form,
       name: form.name.trim(),
