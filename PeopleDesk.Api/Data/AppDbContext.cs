@@ -1,4 +1,4 @@
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PeopleDesk.Api.Models;
 
@@ -6,12 +6,14 @@ namespace PeopleDesk.Api.Data;
 
 public sealed class AppDbContext(
     DbContextOptions<AppDbContext> options
-) : DbContext(options)
+) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Employee> Employees => Set<Employee>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         var employee = modelBuilder.Entity<Employee>();
 
         employee.HasKey(e => e.Id);
