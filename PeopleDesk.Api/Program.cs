@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using PeopleDesk.Api.Data;
 using PeopleDesk.Api.Models;
 using System.Text;
+using PeopleDesk.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("PeopleDesk")
     )
 );
+
+builder.Services.AddScoped<JwtService>();
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
