@@ -207,6 +207,7 @@ function App() {
 
     if (saving) return;
 
+    // Validate required fields.
     if (
       !form.name.trim() ||
       !form.email.trim() ||
@@ -219,11 +220,17 @@ function App() {
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    // Validate email format.
+    const email = form.email.trim();
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
       setFormError("Enter a valid email address.");
       return;
     }
 
+     // Prevent duplicate email addresses.
     const duplicate = employees.some(
       (employee) =>
         employee.email.toLowerCase() ===
