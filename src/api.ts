@@ -1,8 +1,6 @@
 
 import type { Employee, EmployeeInput } from "./types";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5183/api";
+import { request } from "./httpClient";
 
 interface ApiEmployee {
   id: number;
@@ -13,30 +11,6 @@ interface ApiEmployee {
   jobTitle: string;
   status: string;
   hireDate: string;
-}
-
-async function request<T>(
-  path: string,
-  options?: RequestInit
-): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
-
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `API request failed: ${response.status}`);
-  }
-
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  return response.json() as Promise<T>;
 }
 
 function toEmployee(apiEmployee: ApiEmployee): Employee {
@@ -67,6 +41,7 @@ function toApiEmployee(employee: EmployeeInput) {
 
 export async function getEmployees(): Promise<Employee[]> {
   const employees = await request<ApiEmployee[]>("/Employees");
+
   return employees.map(toEmployee);
 }
 
@@ -75,7 +50,7 @@ export async function createEmployee(
 ): Promise<Employee> {
   const created = await request<ApiEmployee>("/Employees", {
     method: "POST",
-    body: JSON.stringify(toApiEmployee(employee)),
+    body: toApiEmployee(employee),
   });
 
   return toEmployee(created);
@@ -87,7 +62,7 @@ export async function updateEmployee(
 ): Promise<Employee> {
   const updated = await request<ApiEmployee>(`/Employees/${id}`, {
     method: "PUT",
-    body: JSON.stringify(toApiEmployee(employee)),
+    body: toApiEmployee(employee),
   });
 
   return toEmployee(updated);
