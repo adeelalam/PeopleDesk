@@ -32,7 +32,4 @@ npm run preview
 ```
 
 ## Suggested next step: 
-
--The API should validate inputs,
--Enforce authorization, 
--Persist data in a database.
+To DO..
