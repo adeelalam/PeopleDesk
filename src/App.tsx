@@ -23,7 +23,11 @@ import {
   UserRound,
   Users,
   X,
+  LogOut,
 } from "lucide-react";
+
+import { useAuth } from "./AuthContext";
+import Login from "./Login";
 
 import {
   getEmployees,
@@ -70,6 +74,13 @@ function initials(name: string) {
 }
 
 function App() {
+
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const userInitials = user
+    ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+    : "U";
+
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState("");
@@ -95,40 +106,46 @@ function App() {
   const pageSize = 6;
 
   // Load employees from the .NET API when the page opens.
-  useEffect(() => {
-    let cancelled = false;
+ useEffect(() => {
+  if (!isAuthenticated) {
+    setEmployees([]);
+    setLoading(false);
+    return;
+  }
 
-    async function loadEmployees() {
-      try {
-        setLoading(true);
-        setApiError("");
+  let cancelled = false;
 
-        const data = await getEmployees();
+  async function loadEmployees() {
+    try {
+      setLoading(true);
+      setApiError("");
 
-        if (!cancelled) {
-          setEmployees(data);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setApiError(
-            error instanceof Error
-              ? error.message
-              : "Failed to load employees from the server."
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+      const data = await getEmployees();
+
+      if (!cancelled) {
+        setEmployees(data);
+      }
+    } catch (error) {
+      if (!cancelled) {
+        setApiError(
+          error instanceof Error
+            ? error.message
+            : "Failed to load employees from the server."
+        );
+      }
+    } finally {
+      if (!cancelled) {
+        setLoading(false);
       }
     }
+  }
 
-    void loadEmployees();
+  void loadEmployees();
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  return () => {
+    cancelled = true;
+  };
+}, [isAuthenticated]);
 
   // Automatically dismiss success messages.
   useEffect(() => {
@@ -403,6 +420,10 @@ if (!validStatuses.includes(form.status)) {
     setToast("Employee list exported");
   }
 
+  if (!isAuthenticated || !user) {
+    return <Login />;
+  }
+
   return (
     <div className="app-shell">
       <aside
@@ -470,15 +491,25 @@ if (!validStatuses.includes(form.status)) {
           </button>
 
           <div className="sidebar-profile">
-            <div className="avatar avatar-admin">AM</div>
-            <div className="profile-copy">
-              <strong>Alex Morgan</strong>
-              <span>Workspace admin</span>
-            </div>
-            <MoreHorizontal size={19} className="muted-icon" />
-          </div>
-        </div>
-      </aside>
+  <div className="avatar avatar-admin">{userInitials}</div>
+
+  <div className="profile-copy">
+    <strong>{user.firstName} {user.lastName}</strong>
+    <span>{user.email}</span>
+  </div>
+
+  <button
+    type="button"
+    className="icon-button"
+    aria-label="Log out"
+    title="Log out"
+    onClick={logout}
+  >
+    <LogOut size={18} />
+  </button>
+</div>
+</div>
+</aside>       
 
       {mobileNavOpen && (
         <button
@@ -519,7 +550,7 @@ if (!validStatuses.includes(form.status)) {
               <i />
             </button>
 
-            <div className="top-avatar">AM</div>
+            <div className="top-avatar">{ userInitials}</div>
           </div>
         </header>
 
