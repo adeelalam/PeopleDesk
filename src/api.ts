@@ -13,6 +13,20 @@ interface ApiEmployee {
   hireDate: string;
 }
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  expiresAtUtc: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 function toEmployee(apiEmployee: ApiEmployee): Employee {
   return {
     id: apiEmployee.id,
@@ -71,5 +85,15 @@ export async function updateEmployee(
 export async function deleteEmployee(id: number): Promise<void> {
   await request<void>(`/Employees/${id}`, {
     method: "DELETE",
+  });
+}
+
+export async function login(
+  credentials: LoginRequest
+): Promise<LoginResponse> {
+  return request<LoginResponse>("/Auth/login", {
+    method: "POST",
+    body: credentials,
+    requiresAuth: false,
   });
 }
