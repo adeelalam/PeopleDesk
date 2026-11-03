@@ -84,8 +84,12 @@ export async function request<T>(
         : `API request failed with status ${response.status}`;
 
     if (response.status === 401) {
-      tokenStorage.clear();
-    }
+  tokenStorage.clear();
+
+  window.dispatchEvent(
+    new Event("peopledesk:unauthorized")
+  );
+}
 
     throw new ApiError(message, response.status);
   }

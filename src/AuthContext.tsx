@@ -2,6 +2,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -37,6 +38,22 @@ function getStoredUser(): AuthUser | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+  function handleUnauthorized() {
+    tokenStorage.clear();
+    sessionStorage.removeItem(USER_KEY);
+    setUser(null);
+  }
+
+  window.addEventListener("peopledesk:unauthorized", handleUnauthorized);
+
+  return () => {
+    window.removeEventListener(
+      "peopledesk:unauthorized",
+      handleUnauthorized
+    );
+  };
+}, []);
   const [user, setUser] = useState<AuthUser | null>(() => {
     return tokenStorage.get() ? getStoredUser() : null;
   });
